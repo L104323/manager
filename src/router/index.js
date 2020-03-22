@@ -30,9 +30,9 @@ export default new Router({
                     meta: { title: '垃圾分类' }
                 },
                 {
-                    path: '/tabs',
-                    component: () => import(/* webpackChunkName: "tabs" */ '../components/page/Tabs.vue'),
-                    meta: { title: 'tab选项卡' }
+                    path: '/point',
+                    component: () => import(/* webpackChunkName: "tabs" */ '../components/page/Point.vue'),
+                    meta: { title: '积分管理' }
                 },
                 {
                     path: '/form',
@@ -53,27 +53,27 @@ export default new Router({
                 },
                 {
                     // 图片上传组件
-                    path: '/upload',
-                    component: () => import(/* webpackChunkName: "upload" */ '../components/page/Upload.vue'),
-                    meta: { title: '文件上传' }
+                    path: '/address',
+                    component: () => import(/* webpackChunkName: "upload" */ '../components/page/Address.vue'),
+                    meta: { title: '地址管理' }
                 },
                 {
                     // vue-schart组件
-                    path: '/charts',
-                    component: () => import(/* webpackChunkName: "chart" */ '../components/page/BaseCharts.vue'),
-                    meta: { title: 'schart图表' }
+                    path: '/Order',
+                    component: () => import(/* webpackChunkName: "chart" */ '../components/page/Order.vue'),
+                    meta: { title: '订单管理' }
                 },
                 {
                     // 拖拽列表组件
-                    path: '/drag',
-                    component: () => import(/* webpackChunkName: "drag" */ '../components/page/DragList.vue'),
+                    path: '/question',
+                    component: () => import(/* webpackChunkName: "drag" */ '../components/page/Question.vue'),
                     meta: { title: '拖拽列表' }
                 },
                 {
                     // 拖拽Dialog组件
-                    path: '/dialog',
-                    component: () => import(/* webpackChunkName: "dragdialog" */ '../components/page/DragDialog.vue'),
-                    meta: { title: '拖拽弹框' }
+                    path: '/shopCar',
+                    component: () => import(/* webpackChunkName: "dragdialog" */ '../components/page/ShopCar.vue'),
+                    meta: { title: '购物车管理' }
                 },
                 {
                     // 国际化组件

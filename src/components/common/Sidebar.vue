@@ -67,9 +67,14 @@ export default {
                     title: '垃圾分类管理'
                 },
                 {
-                    icon: 'el-icon-lx-copy',
-                    index: 'tabs',
+                    icon: 'el-icon-lx-cascades',
+                    index: 'question',
                     title: '题库管理'
+                },
+                {
+                    icon: 'el-icon-lx-copy',
+                    index: 'point',
+                    title: '积分管理'
                 },
                 {
                     icon: 'el-icon-lx-emoji',
@@ -80,6 +85,21 @@ export default {
                     icon: 'el-icon-lx-global',
                     index: 'shop',
                     title: '商品管理'
+                },
+                {
+                    icon: 'el-icon-pie-chart',
+                    index: 'Order',
+                    title: '订单管理'
+                },
+                {
+                    icon: 'el-icon-lx-emoji',
+                    index: 'shopCar',
+                    title: '购物车管理'
+                },
+                 {
+                    icon: 'el-icon-rank',
+                    index: 'address',
+                    title: '地址管理'
                 },
                 {
                     icon: 'el-icon-lx-calendar',
@@ -107,26 +127,6 @@ export default {
                         {
                             index: 'upload',
                             title: '文件上传'
-                        }
-                    ]
-                },
-                {
-                    icon: 'el-icon-pie-chart',
-                    index: 'charts',
-                    title: 'schart图表'
-                },
-                {
-                    icon: 'el-icon-rank',
-                    index: '6',
-                    title: '拖拽组件',
-                    subs: [
-                        {
-                            index: 'drag',
-                            title: '拖拽列表'
-                        },
-                        {
-                            index: 'dialog',
-                            title: '拖拽弹框'
                         }
                     ]
                 },

@@ -14,11 +14,11 @@
                     class="handle-del mr10"
                     @click="addSelection"
                 >添加</el-button>
-                <el-select v-model="query.roleId" placeholder="角色" class="handle-select mr10">
+                <!-- <el-select v-model="query.roleId" placeholder="角色" class="handle-select mr10">
                     <el-option key="1" label="超级管理员" value=1></el-option>
                     <el-option key="2" label="管理员" value=2></el-option>
                     <el-option key="3" label="普通用户" value=3></el-option>
-                </el-select>
+                </el-select> -->
                 <el-input v-model="query.username" placeholder="请输入用户名" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
@@ -31,29 +31,11 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <!-- <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column> -->
                 <el-table-column prop="username" label="用户名"></el-table-column>
-                <el-table-column label="密码" prop="password">
-                    <!-- <template slot-scope="scope">{{scope.row.money}}{{scope.row.password}}</template> -->
-                </el-table-column>
-                <el-table-column prop="email" label="邮箱"></el-table-column>
-                 <el-table-column prop="roleName" label="角色" width="100" align="center"></el-table-column>
-                <el-table-column label="头像" align="center">
-                    <template slot-scope="scope">
-                        <el-image
-                            class="table-td-thumb"
-                            :src="imgBaseUrl+scope.row.headImg"
-                            :preview-src-list="[scope.row.headImg]"
-                        ></el-image>
-                    </template>
-                </el-table-column>
-                <!-- <el-table-column label="状态" align="center">
-                    <template slot-scope="scope">
-                        <el-tag
-                            :type="scope.row.state==='成功'?'success':(scope.row.state==='失败'?'danger':'')"
-                        >{{scope.row.state}}</el-tag>
-                    </template>
-                </el-table-column> -->
+                <el-table-column label="收货人" prop="receiver"></el-table-column>
+                <el-table-column prop="phone" label="收货电话"></el-table-column>
+                <el-table-column prop="area" label="地区" align="center"></el-table-column>
+                <el-table-column prop="detailAddress" label="详细地址" align="center"></el-table-column>
 
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
@@ -173,6 +155,8 @@ export default {
                 roleId:''
             },
             tableData: [],
+            userList:[],
+
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -202,19 +186,8 @@ export default {
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
-            // fetchData(this.query).then(res => {
-            //     console.log(111)
-            //     console.log(res);
-            //     this.tableData = res.list;
-            //     this.pageTotal = res.pageTotal || 50;
-            // });
-            // fetchData().then(res => {
-            //     console.log(111)
-            //     console.log(res);
-            //     // this.tableData = res.list;
-            //     // this.pageTotal = res.pageTotal || 50;
-            // });
             this.imgBaseUrl= imgUrl;
+            // 查用户
             this.$http.post('/api/user/findUser',{
                 username: '',
                 pageIndex: 0,
@@ -223,13 +196,32 @@ export default {
             })
             .then(res=>{
                 if(res.status==200){
-                    this.pageTotal=res.data.length;
+                    this.userList=res.data;
+                    
                 } 
             })
             .catch(error=>{
                 console.log(error)
             })
-            this.pageInfo();
+            // 查地址
+            this.$http.post('/api/findAddress')
+             .then(res=>{
+                 console.log(res)
+                if(res.status==200){
+                    this.tableData=res.data;
+                    this.tableData.forEach((item,index)=>{
+                        this.userList.forEach((userItem,i)=>{
+                            if(item.userId==userItem._id){
+                                item.username = userItem.username
+                            }
+                        })
+                    })
+                } 
+            })
+            .catch(error=>{
+                console.log(error)
+            })
+            // this.pageInfo();
         },
         // 根据分页信息和用户名称查询用户
         pageInfo(){

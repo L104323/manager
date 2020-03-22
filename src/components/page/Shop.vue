@@ -14,12 +14,12 @@
                     class="handle-del mr10"
                     @click="addSelection"
                 >添加</el-button>
-                <el-select v-model="query.roleId" placeholder="角色" class="handle-select mr10">
+                <!-- <el-select v-model="query.roleId" placeholder="角色" class="handle-select mr10">
                     <el-option key="1" label="超级管理员" value=1></el-option>
                     <el-option key="2" label="管理员" value=2></el-option>
                     <el-option key="3" label="普通用户" value=3></el-option>
-                </el-select>
-                <el-input v-model="query.username" placeholder="请输入用户名" class="handle-input mr10"></el-input>
+                </el-select> -->
+                <el-input v-model="query.username" placeholder="请输入商品名" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
@@ -38,7 +38,7 @@
                 </el-table-column>
                 <el-table-column prop="point" label="兑换积分" width="100" align="center"></el-table-column>
                 <el-table-column prop="money" label="价格" width="100"></el-table-column>
-                <el-table-column prop="email" label="颜色">
+                <!-- <el-table-column prop="email" label="颜色">
                     <template slot-scope="scope">
                         <template v-for="(item,index) in scope.row.colorParams">
                             {{item.color}}
@@ -50,7 +50,7 @@
                             ></el-image>
                         </template>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
                 <el-table-column prop="stock" label="库存"></el-table-column>
                 <el-table-column label="商品主图片" align="center">
                     <template slot-scope="scope">

@@ -31,22 +31,24 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <!-- <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column> -->
-                <el-table-column prop="username" label="用户名"></el-table-column>
-                <el-table-column label="密码" prop="password">
-                    <!-- <template slot-scope="scope">{{scope.row.money}}{{scope.row.password}}</template> -->
-                </el-table-column>
-                <el-table-column prop="email" label="邮箱"></el-table-column>
-                 <el-table-column prop="roleName" label="角色" width="100" align="center"></el-table-column>
-                <el-table-column label="头像" align="center">
+                <el-table-column prop="orderNo" label="订单号" align="center"></el-table-column>
+                <el-table-column label="订单商品详情" align="center">
                     <template slot-scope="scope">
-                        <el-image
-                            class="table-td-thumb"
-                            :src="imgBaseUrl+scope.row.headImg"
-                            :preview-src-list="[scope.row.headImg]"
-                        ></el-image>
+                        <el-tag @click="findOrderShop(scope.row.orderList)">点击查看</el-tag> 
                     </template>
                 </el-table-column>
+                <el-table-column prop="allPoint" label="合计积分" align="center"></el-table-column>
+                 <el-table-column prop="receive.receiver" label="收货人" align="center"></el-table-column>
+                  <el-table-column prop="receive.phone" label="联系电话" align="center"></el-table-column>
+                   <el-table-column label="地址" align="center">
+                       <template slot-scope="scope">
+                           {{scope.row.receive.area}}{{scope.row.receive.detailAddress}}
+                       </template>
+                   </el-table-column>
+                <el-table-column prop="creatTime" label="下单时间" align="center"></el-table-column>
+                <el-table-column prop="payTime" label="支付时间" align="center"></el-table-column>
+                <el-table-column prop="sendTime" label="发货时间" align="center"></el-table-column>
+                <el-table-column prop="status" label="状态" align="center"></el-table-column>
                 <!-- <el-table-column label="状态" align="center">
                     <template slot-scope="scope">
                         <el-tag
@@ -55,19 +57,9 @@
                     </template>
                 </el-table-column> -->
 
-                <el-table-column label="操作" width="180" align="center">
-                    <template slot-scope="scope">
-                        <el-button
-                            type="text"
-                            icon="el-icon-edit"
-                            @click="handleEdit(scope.$index, scope.row)"
-                        >修改</el-button>
-                        <el-button
-                            type="text"
-                            icon="el-icon-delete"
-                            class="red"
-                            @click="handleDelete(scope.$index, scope.row)"
-                        >删除</el-button>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope" v-if="scope.row.status!='待收货'">
+                        <el-button type="danger" @click="send(scope.$index, scope.row)">发货</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -82,7 +74,40 @@
                 ></el-pagination>
             </div>
         </div>
-
+        <!-- 查看弹出框 -->
+        <el-dialog title="订单商品详情" :visible.sync="shopVisible">
+             <el-table
+                :data="orderShop"
+                border
+                class="table"
+                style="width: 100%">
+                <el-table-column
+                prop="shopName"
+                label="名称"
+                width="180">
+                </el-table-column>
+                <el-table-column
+                label="图片"
+                width="180">
+                    <template slot-scope="scope">
+                        <el-image
+                            class="table-td-thumb"
+                            :src="imgBaseUrl+scope.row.shopImg"
+                            :preview-src-list="[scope.row.shopImg]"
+                        ></el-image>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                prop="point"
+                label="积分"
+                width="180">
+                </el-table-column>
+                <el-table-column
+                prop="num"
+                label="数量">
+                </el-table-column>
+            </el-table>
+        </el-dialog>
         <!-- 编辑弹出框 -->
         <el-dialog title="修改" :visible.sync="editVisible" width="30%">
             <el-form ref="form2" label-width="70px">
@@ -166,6 +191,8 @@ export default {
     name: 'basetable',
     data() {
         return {
+            shopVisible:false, //查看订单商品弹框
+            orderShop: [],  //订单商品
             query: {
                 username: '',
                 pageIndex: 1,
@@ -200,36 +227,59 @@ export default {
         this.getData();
     },
     methods: {
-        // 获取 easy-mock 的模拟数据
+        findOrderShop (orderShop) {
+            this.shopVisible = true
+            this.orderShop = orderShop
+        },
+        // 获取订单信息
         getData() {
-            // fetchData(this.query).then(res => {
-            //     console.log(111)
-            //     console.log(res);
-            //     this.tableData = res.list;
-            //     this.pageTotal = res.pageTotal || 50;
-            // });
-            // fetchData().then(res => {
-            //     console.log(111)
-            //     console.log(res);
-            //     // this.tableData = res.list;
-            //     // this.pageTotal = res.pageTotal || 50;
-            // });
             this.imgBaseUrl= imgUrl;
-            this.$http.post('/api/user/findUser',{
-                username: '',
-                pageIndex: 0,
-                pageSize: 0,
-                roleId:''
+            this.$http.post('/api/findOrder')
+            .then(res => {
+                if(res.status == 200){
+                    this.tableData = res.data
+                    this.tableData.forEach((item,index)=>{
+                        var create = new Date(item.creatTime);
+                        var creatTime = create.getFullYear() + '-' + (create.getMonth()+1) + '-' + create.getDate() + ' ' +create.getHours() +':' + create.getMinutes()+':' + create.getSeconds();
+                        item.creatTime = creatTime
+                        if(item.payTime){
+                            var pay = new Date(item.payTime);
+                            var payTime = pay.getFullYear() + '-' + (pay.getMonth()+1) + '-' + pay.getDate() + ' ' +pay.getHours() +':' + pay.getMinutes()+':' + pay.getSeconds();
+                            item.payTime = payTime
+                        }
+                        if(item.sendTime){
+                            var send = new Date(item.sendTime);
+                            var sendTime = send.getFullYear() + '-' + (send.getMonth()+1) + '-' + send.getDate() + ' ' +send.getHours() +':' + send.getMinutes()+':' + send.getSeconds();
+                            item.sendTime = sendTime
+                        }
+                        var countPoint = 0
+                        item.orderList.forEach(pro=>{                          
+                            countPoint = countPoint + pro.num*pro.point
+                        })
+                        item.allPoint = countPoint
+                    })
+                }
             })
-            .then(res=>{
-                if(res.status==200){
-                    this.pageTotal=res.data.length;
-                } 
-            })
-            .catch(error=>{
+            .catch(error => {
                 console.log(error)
             })
-            this.pageInfo();
+
+
+            // this.$http.post('/api/user/findUser',{
+            //     username: '',
+            //     pageIndex: 0,
+            //     pageSize: 0,
+            //     roleId:''
+            // })
+            // .then(res=>{
+            //     if(res.status==200){
+            //         this.pageTotal=res.data.length;
+            //     } 
+            // })
+            // .catch(error=>{
+            //     console.log(error)
+            // })
+            // this.pageInfo();
         },
         // 根据分页信息和用户名称查询用户
         pageInfo(){
@@ -274,31 +324,22 @@ export default {
             })
             this.pageInfo();
         },
-        // 删除操作
-        handleDelete(index, row) {
+        // 发货操作
+        send(index, row) {
             var id = row._id;
-            // deleteUser(id).then(res => {
-            //     console.log(111)
-            //     console.log(res);
-            //     // this.tableData = res.list;
-            //     // this.pageTotal = res.pageTotal || 50;
-            // });
-            // 二次确认删除
-            this.$confirm('确定要删除吗？', '提示', {
+            this.$confirm('确定要发货吗？', '提示', {
                 type: 'warning'
             })
             .then(() => {
-                this.$http.post('/api/user/deleteUser',{
-                    id:row._id
+                this.$http.post('/api/updateOrderBySend',{
+                    status:'待收货',
+                    orderNo:row.orderNo,
+                    sendTime:new Date()
                 })
                 .then(res=>{
                     if(res.data.msg==1){
-                        // this.tableData.splice(index, 1);
-                        this.query.username='',
-                        this.query.roleId='',
-                        this.query.pageIndex=1,
                         this.getData();
-                        this.$message.success('删除成功');
+                        this.$message.success('发货成功');
                     }
                 })
             })

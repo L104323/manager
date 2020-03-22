@@ -14,12 +14,12 @@
                     class="handle-del mr10"
                     @click="addSelection"
                 >添加</el-button>
-                <el-select v-model="query.roleId" placeholder="角色" class="handle-select mr10">
+                <!-- <el-select v-model="query.roleId" placeholder="角色" class="handle-select mr10">
                     <el-option key="1" label="超级管理员" value=1></el-option>
                     <el-option key="2" label="管理员" value=2></el-option>
                     <el-option key="3" label="普通用户" value=3></el-option>
-                </el-select>
-                <el-input v-model="query.username" placeholder="请输入用户名" class="handle-input mr10"></el-input>
+                </el-select> -->
+                <el-input v-model="query.username" placeholder="请输入题目" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
@@ -31,13 +31,24 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <!-- <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column> -->
-                <el-table-column prop="username" label="用户名"></el-table-column>
-                <el-table-column label="密码" prop="password">
-                    <!-- <template slot-scope="scope">{{scope.row.money}}{{scope.row.password}}</template> -->
+                <el-table-column prop="question" label="题目"  align="center"></el-table-column>
+                <el-table-column prop="explain" label="解析"></el-table-column>
+                <el-table-column label="选项" prop="password">
+                    <template slot-scope="scope">
+                        <p v-for="(item,index) in scope.row.options" :key="index">
+                            {{index+1}}.
+                            {{item.answerContent}}
+                        </p>
+                    </template>
                 </el-table-column>
-                <el-table-column prop="email" label="邮箱"></el-table-column>
-                 <el-table-column prop="roleName" label="角色" width="100" align="center"></el-table-column>
+                <el-table-column prop="email" label="答案">
+                     <template slot-scope="scope">
+                        <template v-for="(item,index) in scope.row.options">
+                            <span v-if="item.isTrue==true" :key="index">{{item.answerContent}}</span>
+                        </template>
+                    </template>
+                </el-table-column>
+                 <!-- <el-table-column prop="roleName" label="角色" width="100" align="center"></el-table-column>
                 <el-table-column label="头像" align="center">
                     <template slot-scope="scope">
                         <el-image
@@ -46,7 +57,7 @@
                             :preview-src-list="[scope.row.headImg]"
                         ></el-image>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
                 <!-- <el-table-column label="状态" align="center">
                     <template slot-scope="scope">
                         <el-tag
@@ -200,36 +211,35 @@ export default {
         this.getData();
     },
     methods: {
-        // 获取 easy-mock 的模拟数据
         getData() {
-            // fetchData(this.query).then(res => {
-            //     console.log(111)
-            //     console.log(res);
-            //     this.tableData = res.list;
-            //     this.pageTotal = res.pageTotal || 50;
-            // });
-            // fetchData().then(res => {
-            //     console.log(111)
-            //     console.log(res);
-            //     // this.tableData = res.list;
-            //     // this.pageTotal = res.pageTotal || 50;
-            // });
             this.imgBaseUrl= imgUrl;
-            this.$http.post('/api/user/findUser',{
-                username: '',
-                pageIndex: 0,
-                pageSize: 0,
-                roleId:''
+            // 查题库
+            this.$http.get('/api/findAllQuestion')
+            .then(res => {
+                console.log(res.data)
+                if(res.status == 200){
+                    this.tableData = res.data
+                }
             })
-            .then(res=>{
-                if(res.status==200){
-                    this.pageTotal=res.data.length;
-                } 
-            })
-            .catch(error=>{
+            .catch(error => {
                 console.log(error)
             })
-            this.pageInfo();
+
+            // this.$http.post('/api/user/findUser',{
+            //     username: '',
+            //     pageIndex: 0,
+            //     pageSize: 0,
+            //     roleId:''
+            // })
+            // .then(res=>{
+            //     if(res.status==200){
+            //         this.pageTotal=res.data.length;
+            //     } 
+            // })
+            // .catch(error=>{
+            //     console.log(error)
+            // })
+            // this.pageInfo();
         },
         // 根据分页信息和用户名称查询用户
         pageInfo(){
