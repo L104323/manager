@@ -27,7 +27,12 @@ export default new Router({
                 {
                     path: '/categoryGarbage',
                     component: () => import(/* webpackChunkName: "table" */ '../components/page/categoryGarbage.vue'),
-                    meta: { title: '垃圾分类' }
+                    meta: { title: '垃圾分类查询管理' }
+                },
+                {
+                    path: '/garbageExplain',
+                    component: () => import(/* webpackChunkName: "table" */ '../components/page/GarbageExplain.vue'),
+                    meta: { title: '垃圾分类介绍管理' }
                 },
                 {
                     path: '/point',
@@ -61,13 +66,13 @@ export default new Router({
                     // vue-schart组件
                     path: '/Order',
                     component: () => import(/* webpackChunkName: "chart" */ '../components/page/Order.vue'),
-                    meta: { title: '订单管理' }
+                    meta: { title: '兑换订单管理' }
                 },
                 {
                     // 拖拽列表组件
                     path: '/question',
                     component: () => import(/* webpackChunkName: "drag" */ '../components/page/Question.vue'),
-                    meta: { title: '拖拽列表' }
+                    meta: { title: '题库管理' }
                 },
                 {
                     // 拖拽Dialog组件

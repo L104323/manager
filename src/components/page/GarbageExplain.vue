@@ -14,13 +14,14 @@
                     class="handle-del mr10"
                     @click="addSelection"
                 >添加</el-button>
-                <el-select v-model="query.roleId" placeholder="角色" class="handle-select mr10">
-                    <el-option key="1" label="超级管理员" value=1></el-option>
-                    <el-option key="2" label="管理员" value=2></el-option>
-                    <el-option key="3" label="普通用户" value=3></el-option>
-                </el-select>
-                <el-input v-model="query.username" placeholder="请输入用户名" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                <!-- <el-select v-model="query.garbageType" placeholder="请选择分类" class="handle-select mr10">
+                    <el-option key="1" label="干垃圾" value="干垃圾"></el-option>
+                    <el-option key="2" label="湿垃圾" value="湿垃圾"></el-option>
+                    <el-option key="3" label="有害垃圾" value="有害垃圾"></el-option>
+                    <el-option key="4" label="可回收垃圾" value="可回收垃圾"></el-option>
+                </el-select> -->
+                <!-- <el-input v-model="query.garbageName" placeholder="请输入垃圾名称" class="handle-input mr10"></el-input> -->
+                <!-- <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button> -->
             </div>
             <el-table
                 :data="tableData"
@@ -31,26 +32,35 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-               
-                
-                 <el-table-column label="序号" width="" align="center">
-                    <template slot-scope="scope">
-                       {{scope.$index+1}}
-                    </template>
+                <el-table-column prop="type" label="分类类型" align="center"></el-table-column>
+                <el-table-column label="概念" prop="detail" align="center">
                 </el-table-column>
-
-                <el-table-column prop="shopType" label="商品类型"></el-table-column>
-
-                <el-table-column prop="shopType" label="广告图">
+                <el-table-column label="标识图" align="center">
                     <template slot-scope="scope">
                         <el-image
                             class="table-td-thumb"
-                            :src="imgBaseUrl+scope.row.shopTypeImg"
-                            :preview-src-list="[scope.row.shopTypeImg]"
+                            :src="imgBaseUrl+scope.row.img"
+                            :preview-src-list="[imgBaseUrl+scope.row.img]"
                         ></el-image>
                     </template>
                 </el-table-column>
+                <el-table-column label="投放注意事项" prop="garbageType" align="left">
+                    <template slot-scope="scope">
+                        <p v-for="(item,index) in scope.row.throw" :key="index">
+                            {{index+1}}.
+                            {{item}}
+                        </p>
+                    </template>
+                </el-table-column>
+                <el-table-column label="主要垃圾" prop="include" align="center"></el-table-column>
 
+                <!-- <el-table-column label="状态" align="center">
+                    <template slot-scope="scope">
+                        <el-tag
+                            :type="scope.row.state==='成功'?'success':(scope.row.state==='失败'?'danger':'')"
+                        >{{scope.row.state}}</el-tag>
+                    </template>
+                </el-table-column> -->
 
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
@@ -68,7 +78,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="pagination">
+            <!-- <div class="pagination">
                 <el-pagination
                     background
                     layout="total, prev, pager, next"
@@ -77,38 +87,22 @@
                     :total="pageTotal"
                     @current-change="handlePageChange"
                 ></el-pagination>
-            </div>
+            </div> -->
         </div>
 
         <!-- 编辑弹出框 -->
         <el-dialog title="修改" :visible.sync="editVisible" width="30%">
             <el-form ref="form2" label-width="70px">
-                <el-form-item label="用户名">
-                    <el-input v-model="updateUserName"></el-input>
+                <el-form-item label="垃圾名称">
+                    <el-input v-model="updateGarbageName"></el-input>
                 </el-form-item>
-                <el-form-item label="密码">
-                    <el-input v-model="updatePassword"></el-input>
-                </el-form-item>
-                <el-form-item label="邮箱">
-                    <el-input v-model="updateEmail"></el-input>
-                </el-form-item>
-                <el-form-item label="角色">
-                    <el-select v-model="updateRoleId" class="handle-select mr10">
-                        <el-option key="1" label="普通用户" value=3></el-option>
-                        <el-option key="2" label="管理员" value=2></el-option>
-                        <el-option key="3" label="超级管理员" value=1></el-option>
+                <el-form-item label="分类">
+                    <el-select v-model="updateGarbageType" placeholder="分类" class="handle-select mr10">
+                        <el-option key="1" label="干垃圾" value="干垃圾"></el-option>
+                        <el-option key="2" label="湿垃圾" value="湿垃圾"></el-option>
+                        <el-option key="3" label="有害垃圾" value="有害垃圾"></el-option>
+                        <el-option key="4" label="可回收垃圾" value="可回收垃圾"></el-option>
                     </el-select>
-                </el-form-item>
-                <el-form-item label="头像">
-                    <el-upload
-                        class="avatar-uploader uploader-headimg"
-                        action="/api/upload"
-                        :show-file-list="false"
-                        :on-success="handleAvatarSuccess"
-                        :before-upload="beforeAvatarUpload">
-                        <img v-if="imgBaseUrl+updateHeadImg" :src="imgBaseUrl+updateHeadImg" class="avatar">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -119,33 +113,17 @@
 
         <!-- 添加弹出框 -->
         <el-dialog title="添加" :visible.sync="addVisible" width="30%">
-            <el-form ref="form" :model="addUser" label-width="70px">
-                <el-form-item label="用户名">
-                    <el-input v-model="addUser.username"></el-input>
+            <el-form ref="form" :model="addGarbage" label-width="70px">
+                <el-form-item label="垃圾名称">
+                    <el-input v-model="addGarbage.garbageName"></el-input>
                 </el-form-item>
-                <el-form-item label="密码">
-                    <el-input v-model="addUser.password"></el-input>
-                </el-form-item>
-                <el-form-item label="邮箱">
-                    <el-input v-model="addUser.email"></el-input>
-                </el-form-item>
-                <el-form-item label="角色">
-                    <el-select v-model="addUser.roleId" class="handle-select mr10">
-                        <el-option key="1" label="普通用户" value=3></el-option>
-                        <el-option key="2" label="管理员" value=2></el-option>
-                        <el-option key="3" label="超级管理员" value=1></el-option>
+                <el-form-item label="分类">
+                    <el-select v-model="addGarbage.garbageType" placeholder="请选择" class="handle-select mr10">
+                        <el-option key="1" label="干垃圾" value="干垃圾"></el-option>
+                        <el-option key="2" label="湿垃圾" value="湿垃圾"></el-option>
+                        <el-option key="3" label="有害垃圾" value="有害垃圾"></el-option>
+                        <el-option key="4" label="可回收垃圾" value="可回收垃圾"></el-option>
                     </el-select>
-                </el-form-item>
-                <el-form-item label="头像">
-                    <el-upload
-                        class="avatar-uploader uploader-headimg"
-                        action="/api/upload"
-                        :show-file-list="false"
-                        :on-success="handleAvatarSuccess"
-                        :before-upload="beforeAvatarUpload">
-                        <img v-if="imgShow" :src="imgShow" class="avatar">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -163,99 +141,68 @@ export default {
     name: 'basetable',
     data() {
         return {
+            // 查询参数
             query: {
-                username: '',
-                pageIndex: 1,
-                pageSize: 5,
-                roleId:''
+                garbageName: '', //垃圾名称
+                pageIndex: 1,    //页码
+                pageSize: 5,     //每页大小
+                garbageType:''   //分类
             },
             tableData: [],
             multipleSelection: [],
-            delList: [],
             editVisible: false,
             addVisible: false,
             pageTotal: 5,
-            updateUser: {}, //修改用户
-            addUser: {
-                roleId: '3'
-            }, // 添加用户
+            updateCategory: {}, //修改垃圾分类
+            addGarbage: {}, // 添加垃圾分类
             idx: -1,
             id: -1,
             imgBaseUrl:'',//图片基本路径localhost:5000/public
             imgShow: '',//上传图片显示,
             // 编辑
-            updateUserName:'',
-            updatePassword:'',
-            updateEmail:'',
-            updateRoleId:'',
-            updateHeadImg:'', 
-            updateId:'',
-            updateHeadImgFlag:1 //用户判断是否修改时上传图片
+            updateGarbageName:'',
+            updateGarbageType:'',
+            updateId:''
         };
     },
     created() {
         this.getData();
     },
     methods: {
-        // 获取 easy-mock 的模拟数据
         getData() {
-            // fetchData(this.query).then(res => {
-            //     console.log(111)
-            //     console.log(res);
-            //     this.tableData = res.list;
-            //     this.pageTotal = res.pageTotal || 50;
-            // });
-            // fetchData().then(res => {
-            //     console.log(111)
-            //     console.log(res);
-            //     // this.tableData = res.list;
-            //     // this.pageTotal = res.pageTotal || 50;
-            // });
             this.imgBaseUrl= imgUrl;
-            this.$http.post('/api/user/findUser',{
-                username: '',
-                pageIndex: 0,
-                pageSize: 0,
-                roleId:''
-            })
+            this.$http.get('/api/findCategory')
             .then(res=>{
+                console.log(res)
                 if(res.status==200){
-                    this.pageTotal=res.data.length;
-                } 
+                    this.tableData = res.data;
+                }
             })
             .catch(error=>{
                 console.log(error)
             })
-            this.pageInfo();
-
-            this.$http.get('/api/findShopType').then(res => {
-                console.log('返回成功')
-                console.log(res);
-            if(res.status==200){
-                this.tableData = res.data
-            }
-            // console.log(res.data)
-            }).catch(error => {
-                console.log(error)
-            })
+            // this.$http.post('/api/findGarbage',{
+            //     garbageName: '',
+            //     pageIndex: 0,
+            //     pageSize: 0,
+            //     garbageType:''
+            // })
+            // .then(res=>{
+            //     if(res.status==200){
+            //         this.pageTotal=res.data.length;
+            //     } 
+            // })
+            // .catch(error=>{
+            //     console.log(error)
+            // })
+            // this.pageInfo()
         },
         // 根据分页信息和用户名称查询用户
         pageInfo(){
-            this.$http.post('/api/user/findUser',this.query)
+            this.$http.post('/api/findGarbage',this.query)
             .then(res=>{
                 if(res.status==200){
                     this.tableData = res.data;
-                    this.tableData.forEach((item,index)=>{
-                        if(this.tableData[index].roleId==1){
-                            this.tableData[index].roleName='超级管理员'
-                        }
-                        if(this.tableData[index].roleId==2){
-                            this.tableData[index].roleName='管理员'
-                        }
-                        if(this.tableData[index].roleId==3){
-                            this.tableData[index].roleName='普通用户'
-                        }
-                    })
                 }
             })
             .catch(error=>{
@@ -265,12 +212,11 @@ export default {
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
-            console.log(this.query)
-            this.$http.post('/api/user/findUser',{
-                username: this.query.username,
+            this.$http.post('/api/findGarbage',{
+                garbageName: this.query.garbageName,
                 pageIndex: 0,
                 pageSize: 0,
-                roleId:this.query.roleId
+                garbageType:this.query.garbageType
             })
             .then(res=>{
                 if(res.status==200){
@@ -285,25 +231,19 @@ export default {
         // 删除操作
         handleDelete(index, row) {
             var id = row._id;
-            // deleteUser(id).then(res => {
-            //     console.log(111)
-            //     console.log(res);
-            //     // this.tableData = res.list;
-            //     // this.pageTotal = res.pageTotal || 50;
-            // });
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             })
             .then(() => {
-                this.$http.post('/api/user/deleteUser',{
+                this.$http.post('/api/deleteOneGarbage',{
                     id:row._id
                 })
                 .then(res=>{
-                    if(res.data.msg==1){
+                    if(res.status=200){
                         // this.tableData.splice(index, 1);
-                        this.query.username='',
-                        this.query.roleId='',
+                        this.query.garbageName='',
+                        this.query.garbageType='',
                         this.query.pageIndex=1,
                         this.getData();
                         this.$message.success('删除成功');
@@ -318,7 +258,7 @@ export default {
         },
         delAllSelection() {
             const length = this.multipleSelection.length;
-            let ids = [];
+            let ids = []; //要删除数据的id
             for (let i = 0; i < length; i++) {
                 ids.push(this.multipleSelection[i]._id);
             }
@@ -332,16 +272,14 @@ export default {
                     type: 'warning'
                 })
                 .then(() => {
-                    this.$http.post('/api/user/deleteManyUser',{
+                    this.$http.post('/api/deleteManyGarbage',{
                         ids:ids
                     })
                     .then(res=>{
                         if(res.status==200){
-                            // console.log('成功')
-                            // this.getData();
-                            this.query.username='',
-                            this.query.roleId='',
-                            this.query.pageIndex=1,
+                            this.query.garbageName='';
+                            this.query.garbageType='';
+                            this.query.pageIndex=1;
                             this.getData();
                             this.$message.success('删除成功');
                         }
@@ -359,41 +297,36 @@ export default {
             this.idx = index;
             // this.updateUser = row; //错，编辑框和表格会同步变化
             this.updateId = row._id;
-            this.updateUserName = row.username;
-            this.updatePassword = row.password;
-            this.updateEmail = row.email;
-            this.updateRoleId = row.roleId;
-            this.updateHeadImg = row.headImg;
-            this.updateHeadImgFlag = 1;
+            this.updateGarbageName = row.garbageName;
+            this.updateGarbageType = row.garbageType;
             this.editVisible = true;
         },
         // 保存修改
         saveEdit() {
-            this.updateHeadImgFlag = 0;
-            this.updateUser={
+            this.updateCategory={
                 id:this.updateId,
-                username:this.updateUserName,
-                password:this.updatePassword,
-                email:this.updateEmail,
-                roleId:this.updateRoleId,
-                headImg:this.updateHeadImg
+                garbageName:this.updateGarbageName,
+                garbageType:this.updateGarbageType,
+                typeImg:' '
             }
-            if(this.updateRoleId==1){
-                this.updateUser.roleName="超级管理员"
+            if(this.updateCategory.garbageType=='干垃圾'){
+                this.updateCategory.typeImg='/categoryGarbage/dry.png'
             }
-            if(this.updateRoleId==2){
-                this.updateUser.roleName="管理员"
+            if(this.updateCategory.garbageType=='湿垃圾'){
+                this.updateCategory.typeImg='/categoryGarbage/wet.png'
             }
-            if(this.updateRoleId==3){
-                this.updateUser.roleName="普通用户"
+            if(this.updateCategory.garbageType=='有害垃圾'){
+                this.updateCategory.typeImg='/categoryGarbage/harm.png'
+            }
+            if(this.updateCategory.garbageType=='可回收垃圾'){
+                this.updateCategory.typeImg='/categoryGarbage/recyle.png'
             }
             this.editVisible = false;
-
-            this.$http.post('/api/user/updateUser',this.updateUser)
+            this.$http.post('/api/updateGarbage',this.updateCategory)
             .then(res=>{
                 if(res.status==200){
+                    this.$set(this.tableData, this.idx, this.updateCategory);
                     this.$message.success(`修改成功`);
-                    this.$set(this.tableData, this.idx, this.updateUser);
                 }
             })
             .catch(error=>{
@@ -412,36 +345,34 @@ export default {
         },
         // 保存添加
         saveAdd(){
-            this.addVisible = false;
-            // 设置默认图片
-            if(this.addUser.imageUrl==undefined){
-                this.addUser.imageUrl = '/avatar/head.png';
+            if(this.addGarbage.garbageType=='干垃圾'){
+                this.addGarbage.typeImg='/categoryGarbage/dry.png'
             }
-            this.$http.post('/api/user/addUser',{
-                username: this.addUser.username,
-                password: this.addUser.password,
-                email: this.addUser.email,
-                roleId: parseInt(this.addUser.roleId),
-                headImg: this.addUser.imageUrl
+            if(this.addGarbage.garbageType=='湿垃圾'){
+                this.addGarbage.typeImg='/categoryGarbage/wet.png'
+            }
+            if(this.addGarbage.garbageType=='有害垃圾'){
+                this.addGarbage.typeImg='/categoryGarbage/harm.png'
+            }
+            if(this.addGarbage.garbageType=='可回收垃圾'){
+                this.addGarbage.typeImg='/categoryGarbage/recyle.png'
+            }
+            this.$http.post('/api/addGarbage',{
+                garbageName: this.addGarbage.garbageName,
+                garbageType: this.addGarbage.garbageType,
+                typeImg: this.addGarbage.typeImg
             }).then(res=>{
                 if(res.status==200){
-                    this.query.username='';
-                    this.query.roleId='';
+                    this.query.garbageName='';
+                    this.query.garbageType='';
                     this.query.pageIndex=1,
                     this.getData();
                     this.$message.success(`添加成功`);
-                    // this.getData().then(()=>{
-                    //     console.log(0)
-                    //     this.$message.success('添加成功');
-                    // })
-                    // var promise = new Promise(this.getData());
-                    // promise.then(()=>{
-                    //     this.$message.success('添加成功');
-                    // })
                 }
             }).catch(error=>{
                 console.log(error)
             })
+            this.addVisible = false;
         },
         handleAvatarSuccess(res, file) {
             this.addUser.imageUrl = URL.createObjectURL(file.raw);
@@ -452,10 +383,6 @@ export default {
                 this.$message.error(res.msg)
             }
             this.imgShow = this.imgBaseUrl+ this.addUser.imageUrl;
-            if(this.updateHeadImgFlag==1){
-                this.updateHeadImg = this.addUser.imageUrl;
-                console.log(this.updateHeadImg)
-            }
         },
         beforeAvatarUpload(file) {
             const isJPG = file.type === 'image/jpeg';

@@ -36,6 +36,7 @@
                 <el-table-column label="密码" prop="password">
                     <!-- <template slot-scope="scope">{{scope.row.money}}{{scope.row.password}}</template> -->
                 </el-table-column>
+                <el-table-column prop="phone" label="电话"></el-table-column>
                 <el-table-column prop="email" label="邮箱"></el-table-column>
                  <el-table-column prop="roleName" label="角色" width="100" align="center"></el-table-column>
                 <el-table-column label="头像" align="center">
@@ -91,6 +92,9 @@
                 </el-form-item>
                 <el-form-item label="密码">
                     <el-input v-model="updatePassword"></el-input>
+                </el-form-item>
+                <el-form-item label="密码">
+                    <el-input v-model="updatePhone"></el-input>
                 </el-form-item>
                 <el-form-item label="邮箱">
                     <el-input v-model="updateEmail"></el-input>
@@ -353,6 +357,7 @@ export default {
             this.updateId = row._id;
             this.updateUserName = row.username;
             this.updatePassword = row.password;
+             this.updatePhone = row.phone;
             this.updateEmail = row.email;
             this.updateRoleId = row.roleId;
             this.updateHeadImg = row.headImg;

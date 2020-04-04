@@ -295,10 +295,24 @@ export default {
             // this.pageInfo();
 
             // 商品列表
-            this.$http.get('/api/findShopList')
+            // this.$http.get('/api/findShopList')
+            // .then(res => {
+            //     this.shopList = res.data
+            //     console.log(res)
+            // })
+            // .catch(error => {
+            //     console.log(error)
+            // })
+            this.$http.get('/api/findShopList2')
             .then(res => {
-                this.shopList = res.data
-                console.log(res)
+                var shop = []
+                res.data.forEach(item=>{
+                    item.shopDetails.forEach((item2,index)=>{
+                        item2.shopType = item.shopType
+                        shop.push(item2)
+                    })
+                })
+                this.shopList = shop
             })
             .catch(error => {
                 console.log(error)

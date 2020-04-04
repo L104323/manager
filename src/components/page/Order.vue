@@ -14,12 +14,12 @@
                     class="handle-del mr10"
                     @click="addSelection"
                 >添加</el-button>
-                <el-select v-model="query.roleId" placeholder="角色" class="handle-select mr10">
+                <!-- <el-select v-model="query.roleId" placeholder="角色" class="handle-select mr10">
                     <el-option key="1" label="超级管理员" value=1></el-option>
                     <el-option key="2" label="管理员" value=2></el-option>
                     <el-option key="3" label="普通用户" value=3></el-option>
-                </el-select>
-                <el-input v-model="query.username" placeholder="请输入用户名" class="handle-input mr10"></el-input>
+                </el-select> -->
+                <el-input v-model="query.username" placeholder="订单号" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table
@@ -74,6 +74,48 @@
                 ></el-pagination>
             </div>
         </div>
+<!-- 
+ <el-table
+                :data="tableData"
+                border
+                class="table"
+                ref="multipleTable"
+                header-cell-class-name="table-header"
+                :span-method="objectSpanMethod"
+                @selection-change="handleSelectionChange"
+                :row-class-name="tableRowClassName"
+            >
+                <el-table-column type="selection" width="55" align="center"></el-table-column>
+                <el-table-column prop="orderNo" label="订单号" align="center"></el-table-column>
+                <el-table-column label="商品名" prop="orderNo">
+                </el-table-column>
+                
+                <el-table-column label="订单商品详情" align="center">
+                    <template slot-scope="scope">
+                        <el-tag @click="findOrderShop(scope.row.orderList)">点击查看</el-tag> 
+                    </template>
+                </el-table-column>
+                <el-table-column prop="allPoint" label="合计积分" align="center"></el-table-column>
+                 <el-table-column prop="receive.receiver" label="收货人" align="center"></el-table-column>
+                  <el-table-column prop="receive.phone" label="联系电话" align="center"></el-table-column>
+                   <el-table-column label="地址" align="center">
+                       <template slot-scope="scope">
+                           {{scope.row.receive.area}}{{scope.row.receive.detailAddress}}
+                       </template>
+                   </el-table-column>
+                <el-table-column prop="creatTime" label="下单时间" align="center"></el-table-column>
+                <el-table-column prop="payTime" label="支付时间" align="center"></el-table-column>
+                <el-table-column prop="sendTime" label="发货时间" align="center"></el-table-column>
+                <el-table-column prop="status" label="状态" align="center"></el-table-column>
+                <el-table-column label="操作" align="center">
+                    <template slot-scope="scope" v-if="scope.row.status!='待收货'">
+                        <el-button type="danger" @click="send(scope.$index, scope.row)">发货</el-button>
+                    </template>
+                </el-table-column>
+            </el-table> -->
+
+
+
         <!-- 查看弹出框 -->
         <el-dialog title="订单商品详情" :visible.sync="shopVisible">
              <el-table
@@ -220,13 +262,35 @@ export default {
             updateRoleId:'',
             updateHeadImg:'', 
             updateId:'',
-            updateHeadImgFlag:1 //用户判断是否修改时上传图片
+            updateHeadImgFlag:1, //用户判断是否修改时上传图片
+            list:[]
         };
     },
     created() {
         this.getData();
     },
     methods: {
+         tableRowClassName ({row, rowIndex}) {
+            //  console.log(row)
+             console.log(rowIndex)
+             this.tableData[rowIndex].row = rowIndex
+             console.log(this.tableData)
+    4     },
+         objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+        if (columnIndex === 0 || columnIndex === 1) {
+          if (rowIndex % 2 === 0) {
+            return {
+              rowspan: 2,
+              colspan: 1
+            };
+          } else {
+            return {
+              rowspan: 0,
+              colspan: 0
+            };
+          }
+        }
+      },
         findOrderShop (orderShop) {
             this.shopVisible = true
             this.orderShop = orderShop

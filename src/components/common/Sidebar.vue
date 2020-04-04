@@ -62,10 +62,22 @@ export default {
                     title: '用户管理'
                 },
                 {
-                    icon: 'el-icon-lx-cascades',
-                    index: 'categoryGarbage',
-                    title: '垃圾分类管理'
-                },
+                    icon: 'el-icon-lx-calendar',
+                    index: '2',
+                    title: '垃圾分类',
+                    subs: [
+                        {
+                            icon: 'el-icon-lx-cascades',
+                            index: 'categoryGarbage',
+                            title: '垃圾分类查询管理'
+                        },
+                        {
+                            icon: 'el-icon-lx-cascades',
+                            index: 'garbageExplain',
+                            title: '垃圾分类介绍管理'
+                        }
+                    ]
+                 },
                 {
                     icon: 'el-icon-lx-cascades',
                     index: 'question',
@@ -77,19 +89,26 @@ export default {
                     title: '积分管理'
                 },
                 {
-                    icon: 'el-icon-lx-emoji',
-                    index: 'shopType',
-                    title: '商品类型管理'
-                },
-                {
-                    icon: 'el-icon-lx-global',
-                    index: 'shop',
-                    title: '商品管理'
+                    icon: 'el-icon-lx-calendar',
+                    index: '3',
+                    title: '商品管理',
+                    subs: [
+                        {
+                            icon: 'el-icon-lx-emoji',
+                            index: 'shopType',
+                            title: '商品类型管理'
+                        },
+                        {
+                            icon: 'el-icon-lx-global',
+                            index: 'shop',
+                            title: '商品管理'
+                        }
+                    ]
                 },
                 {
                     icon: 'el-icon-pie-chart',
                     index: 'Order',
-                    title: '订单管理'
+                    title: '兑换订单管理'
                 },
                 {
                     icon: 'el-icon-lx-emoji',
@@ -101,50 +120,46 @@ export default {
                     index: 'address',
                     title: '地址管理'
                 },
-                {
-                    icon: 'el-icon-lx-calendar',
-                    index: '3',
-                    title: '表单相关',
-                    subs: [
-                        {
-                            index: 'form',
-                            title: '基本表单'
-                        },
-                        {
-                            index: '3-2',
-                            title: '三级菜单',
-                            subs: [
-                                {
-                                    index: 'editor',
-                                    title: '富文本编辑器'
-                                },
-                                {
-                                    index: 'markdown',
-                                    title: 'markdown编辑器'
-                                }
-                            ]
-                        },
-                        {
-                            index: 'upload',
-                            title: '文件上传'
-                        }
-                    ]
-                },
-                {
-                    icon: 'el-icon-lx-warn',
-                    index: '7',
-                    title: '错误处理',
-                    subs: [
-                        {
-                            index: 'permission',
-                            title: '权限测试'
-                        },
-                        {
-                            index: '404',
-                            title: '404页面'
-                        }
-                    ]
-                }
+                // {
+                //     icon: 'el-icon-lx-calendar',
+                //     index: '3',
+                //     title: '表单相关',
+                //     subs: [
+                //         {
+                //             index: 'form',
+                //             title: '基本表单'
+                //         },
+                //         {
+                //             index: '3-2',
+                //             title: '三级菜单',
+                //             subs: [
+                //                 {
+                //                     index: 'editor',
+                //                     title: '富文本编辑器'
+                //                 },
+                //                 {
+                //                     index: 'markdown',
+                //                     title: 'markdown编辑器'
+                //                 }
+                //             ]
+                //         }
+                //     ]
+                // },
+                // {
+                //     icon: 'el-icon-lx-warn',
+                //     index: '7',
+                //     title: '错误处理',
+                //     subs: [
+                //         {
+                //             index: 'permission',
+                //             title: '权限测试'
+                //         },
+                //         {
+                //             index: '404',
+                //             title: '404页面'
+                //         }
+                //     ]
+                // }
             ]
         };
     },
