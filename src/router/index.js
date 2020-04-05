@@ -40,9 +40,15 @@ export default new Router({
                     meta: { title: '积分管理' }
                 },
                 {
-                    path: '/form',
-                    component: () => import(/* webpackChunkName: "form" */ '../components/page/BaseForm.vue'),
-                    meta: { title: '基本表单' }
+                    path: '/addQuestion',
+                    component: () => import(/* webpackChunkName: "form" */ '../components/page/AddQuestion.vue'),
+                    meta: { title: '添加题目' }
+                },
+                {
+                    path: '/updateQuestion',
+                    name: 'updateQuestion',
+                    component: () => import(/* webpackChunkName: "form" */ '../components/page/UpdateQuestion.vue'),
+                    meta: { title: '修改题目' }
                 },
                 {
                     // 富文本编辑器组件
